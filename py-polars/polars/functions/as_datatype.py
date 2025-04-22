@@ -33,6 +33,7 @@ def datetime_(
     second: int | IntoExpr | None = None,
     microsecond: int | IntoExpr | None = None,
     *,
+    strict: bool = True,
     time_unit: TimeUnit = "us",
     time_zone: str | None = None,
     ambiguous: Ambiguous | Expr = "raise",
@@ -56,6 +57,9 @@ def datetime_(
         Column or literal, ranging from 0-59.
     microsecond
         Column or literal, ranging from 0-999999.
+    strict
+        Whether to raise an error on invalid datetimes. If `False`,
+        set to null instead.
     time_unit : {'us', 'ms', 'ns'}
         Time unit of the resulting expression.
     time_zone
@@ -155,6 +159,7 @@ def datetime_(
             minute,
             second,
             microsecond,
+            strict,
             time_unit,
             time_zone,
             ambiguous_expr,

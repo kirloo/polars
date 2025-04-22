@@ -58,17 +58,18 @@ impl From<TemporalFunction> for SpecialEq<Arc<dyn ColumnsUdf>> {
             #[cfg(feature = "timezones")]
             DSTOffset => map!(datetime::dst_offset),
             Round => map_as_slice!(datetime::round),
-            Replace => map_as_slice!(datetime::replace),
+            Replace { strict } => map_as_slice!(datetime::replace, strict),
             #[cfg(feature = "timezones")]
             ReplaceTimeZone(tz, non_existent) => {
                 map_as_slice!(dispatch::replace_time_zone, tz.as_deref(), non_existent)
             },
             Combine(tu) => map_as_slice!(temporal::combine, tu),
             DatetimeFunction {
+                strict,
                 time_unit,
                 time_zone,
             } => {
-                map_as_slice!(temporal::datetime, &time_unit, time_zone.as_deref())
+                map_as_slice!(temporal::datetime, strict, &time_unit, time_zone.as_deref())
             },
         }
     }
@@ -77,6 +78,7 @@ impl From<TemporalFunction> for SpecialEq<Arc<dyn ColumnsUdf>> {
 #[cfg(feature = "dtype-datetime")]
 pub(super) fn datetime(
     s: &[Column],
+    strict: bool,
     time_unit: &TimeUnit,
     time_zone: Option<&str>,
 ) -> PolarsResult<Column> {
@@ -165,8 +167,8 @@ pub(super) fn datetime(
     let ambiguous = _ambiguous.str()?;
 
     let ca = DatetimeChunked::new_from_parts(
-        year, month, day, hour, minute, second, nanosecond, ambiguous, time_unit, time_zone,
-        col_name,
+        year, month, day, hour, minute, second, nanosecond, strict, ambiguous, time_unit,
+        time_zone, col_name,
     );
     ca.map(|s| s.into_column())
 }

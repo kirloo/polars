@@ -41,6 +41,7 @@ pub struct DatetimeArgs {
     pub time_unit: TimeUnit,
     pub time_zone: Option<TimeZone>,
     pub ambiguous: Expr,
+    pub strict: bool,
 }
 
 impl Default for DatetimeArgs {
@@ -56,6 +57,7 @@ impl Default for DatetimeArgs {
             time_unit: TimeUnit::Microseconds,
             time_zone: None,
             ambiguous: lit(String::from("raise")),
+            strict: true,
         }
     }
 }
@@ -196,6 +198,7 @@ pub fn datetime(args: DatetimeArgs) -> Expr {
     let minute = args.minute;
     let second = args.second;
     let microsecond = args.microsecond;
+    let strict = args.strict;
     let time_unit = args.time_unit;
     let time_zone = args.time_zone;
     let ambiguous = args.ambiguous;
@@ -215,6 +218,7 @@ pub fn datetime(args: DatetimeArgs) -> Expr {
         Arc::new(Expr::Function {
             input,
             function: FunctionExpr::TemporalExpr(TemporalFunction::DatetimeFunction {
+                strict,
                 time_unit,
                 time_zone,
             }),

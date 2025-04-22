@@ -413,6 +413,7 @@ class ExprDateTimeNameSpace:
         minute: int | IntoExpr | None = None,
         second: int | IntoExpr | None = None,
         microsecond: int | IntoExpr | None = None,
+        strict: bool = True,
         ambiguous: Ambiguous | Expr = "raise",
     ) -> Expr:
         """
@@ -434,6 +435,9 @@ class ExprDateTimeNameSpace:
             Column or literal, ranging from 0-59.
         microsecond
             Column or literal, ranging from 0-999999.
+        strict
+            Whether to raise an error on invalid datetimes. If `False`,
+            set to null instead.
         ambiguous
             Determine how to deal with ambiguous datetimes:
 
@@ -493,6 +497,7 @@ class ExprDateTimeNameSpace:
                 minute,
                 second,
                 microsecond,
+                strict,
                 ambiguous_expr,
             )
         )

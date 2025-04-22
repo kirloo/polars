@@ -15,6 +15,7 @@ pub fn replace_datetime(
     second: &Int8Chunked,
     nanosecond: &Int32Chunked,
     ambiguous: &StringChunked,
+    strict: bool,
 ) -> PolarsResult<DatetimeChunked> {
     let n = [
         ca.len(),
@@ -131,6 +132,7 @@ pub fn replace_datetime(
         minute,
         second,
         nanosecond,
+        strict,
         ambiguous,
         &ca.time_unit(),
         ca.time_zone().clone(),

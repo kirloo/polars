@@ -122,6 +122,7 @@ impl PyExpr {
         minute: Self,
         second: Self,
         microsecond: Self,
+        strict: bool,
         ambiguous: Self,
     ) -> Self {
         self.inner
@@ -135,6 +136,7 @@ impl PyExpr {
                 minute.inner,
                 second.inner,
                 microsecond.inner,
+                strict,
                 ambiguous.inner,
             )
             .into()
